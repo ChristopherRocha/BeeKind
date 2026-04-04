@@ -1,0 +1,6 @@
+@BeeKind_HostAddress = http://localhost:5444
+
+GET {{BeeKind_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
