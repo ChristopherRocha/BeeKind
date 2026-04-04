@@ -69,7 +69,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 });
 
 // JWT Settings
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "super_secret_key";
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "BeeKindSecretKey(not today baby haha)";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "BeeKindIssuer";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "BeeKindAudience";
 
