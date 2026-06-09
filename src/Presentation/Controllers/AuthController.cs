@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[ApiController]
 [Authorize]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -36,6 +37,11 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
+        if (loginDto == null || string.IsNullOrWhiteSpace(loginDto.Email) || string.IsNullOrWhiteSpace(loginDto.Password))
+        {
+            return BadRequest("Email and password are required");
+        }
+
         var token = await _authService.Login(loginDto);
         return Ok(new { Token = token });
     }

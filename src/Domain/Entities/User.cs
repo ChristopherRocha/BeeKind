@@ -12,7 +12,7 @@ public class User
 
     [Required]
     public string Email { get; private set; } = default!;
-
+    public Guid Uuid { get; set; } = Guid.NewGuid();
     public List<Contact> Contacts { get; private set; } = new();
 
     private User() { }
@@ -22,6 +22,7 @@ public class User
         Name = name;
         Email = email;
         IdentityUserId = identityUserId;
+        Uuid = Guid.NewGuid();
         Contacts = contacts ?? new List<Contact>();
     }
 

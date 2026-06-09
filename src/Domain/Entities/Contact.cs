@@ -11,6 +11,7 @@ public class Contact
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
+    public Guid Uuid { get; set; } = Guid.NewGuid();
     public List<Event> Events { get; set; } = new List<Event>();
     public Contact(string name, string email, string phoneNumber, int userId, List<Event>? events)
     {
@@ -18,6 +19,7 @@ public class Contact
         Name = name;
         Email = email;
         PhoneNumber = phoneNumber;
+        Uuid = Guid.NewGuid();
         Events = events ?? new List<Event>();
     }
     private Contact() { }

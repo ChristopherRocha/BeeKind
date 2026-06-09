@@ -12,6 +12,7 @@ public class Event
     public DateTime Date { get; set; } 
     public string? Location { get; set; } = default!;
     public string? Message { get; set; } = default!;
+    public Guid Uuid { get; set; } = Guid.NewGuid();
     public string? Description { get; set; } = default!;
 
     private Event() { }
@@ -23,6 +24,7 @@ public class Event
         Location = location;
         ContactId = contactId;
         Message = message;
+        Uuid = Guid.NewGuid();
         Description = description;
     }
     

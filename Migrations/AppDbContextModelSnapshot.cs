@@ -44,6 +44,9 @@ namespace BeeKind.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
@@ -78,6 +81,9 @@ namespace BeeKind.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContactId");
@@ -103,6 +109,9 @@ namespace BeeKind.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

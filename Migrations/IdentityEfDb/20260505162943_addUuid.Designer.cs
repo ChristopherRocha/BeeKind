@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeeKind.Migrations.IdentityEfDb
 {
     [DbContext(typeof(IdentityEfDbContext))]
-    [Migration("20260328142010_initialIdentity")]
-    partial class initialIdentity
+    [Migration("20260505162943_addUuid")]
+    partial class addUuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

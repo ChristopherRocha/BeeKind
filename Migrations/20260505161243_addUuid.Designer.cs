@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeeKind.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260315151835_initialMigrate")]
-    partial class initialMigrate
+    [Migration("20260505161243_addUuid")]
+    partial class addUuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,8 +44,11 @@ namespace BeeKind.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
+
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -62,18 +65,31 @@ namespace BeeKind.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ContactId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Location")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Message")
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
 
                     b.ToTable("Events");
                 });
@@ -90,20 +106,49 @@ namespace BeeKind.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Contact", b =>
                 {
-                    b.HasOne("User", null)
+                    b.HasOne("User", "User")
                         .WithMany("Contacts")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Event", b =>
+                {
+                    b.HasOne("Contact", "Contact")
+                        .WithMany("Events")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
+            modelBuilder.Entity("Contact", b =>
+                {
+                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("User", b =>

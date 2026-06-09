@@ -99,16 +99,24 @@ public class AuthRepository
         var token = await _context.GeneratePasswordResetTokenAsync(user);
 
 
-        var resetLink = $"https://yourfrontend.com/reset-password?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
-        var body = $"Clique no link para resetar sua senha: {resetLink}";
-        
-        await _emailService.SendEmailAsync(user.Email ?? email, "Reset de Senha", body);
+        var body = $"""
+        Ola,
+
+        Recebemos uma solicitacao para redefinir sua senha no BeeKind.
+
+        Use este token no endpoint POST /api/Auth/reset-password:
+
+        Email: {user.Email ?? email}
+        Token: {token}
+
+        Este token expira em 30 minutos.
+        Se voce nao solicitou a redefinicao de senha, ignore este email.
+        """;
+
+        await _emailService.SendEmailAsync(user.Email ?? email, "Redefinicao de senha - BeeKind", body);
 
 
-        return string.Empty; // O token é enviado por email, não é retornado pela API
-
-        // Aqui você pode implementar a lógica para enviar o token por email ao usuário
-        // O email deve conter um link para uma página onde o usuário possa resetar a senha, passando o token como parâmetro
+        return string.Empty; // O token e enviado por email, nao e retornado pela API
     }
 
     public async Task DeleteUser(string email)

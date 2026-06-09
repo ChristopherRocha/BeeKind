@@ -7,6 +7,9 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Force IPv4 stack when DNS returns IPv6-only records.
+AppContext.SetSwitch("System.Net.DisableIPv6", true);
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen(options =>
@@ -100,14 +103,34 @@ var app = builder.Build();
 // Criação automática das roles 'AboveAll' e 'User' ao iniciar a aplicação
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = { "AboveAll", "User" };
-    foreach (var role in roles)
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        var identityContext = scope.ServiceProvider.GetRequiredService<IdentityEfDbContext>();
+        var canConnect = await identityContext.Database.CanConnectAsync();
+
+        if (!canConnect)
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            logger.LogWarning("Identity seed ignorado: não foi possível conectar ao banco de dados.");
         }
+        else
+        {
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roles = { "AboveAll", "User" };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Falha ao executar seed de roles na inicialização.");
     }
 }
 

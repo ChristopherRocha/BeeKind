@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeeKind.Migrations.IdentityEfDb
 {
     /// <inheritdoc />
-    public partial class initialIdentity : Migration
+    public partial class addUuid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
